@@ -1,5 +1,8 @@
 #include <iostream>
 #include <string>
+#include <string.h>
+#include <algorithm>
+#include <math.h>
 
 namespace cpp2 {
     /* --------------------------------------------------------------------- */
@@ -26,14 +29,15 @@ namespace cpp2 {
         /* ----------------------------------------------------------------- */
     private:
         int value_;
-    public:
+        std::string const str_mcxi="mcxi";
+        std::string const str_mcxi_inverse="ixcm";
+        public:
         mcxi(const std::string& s) : value_(0) {
             int num = 0;
             int mcxi_num=0;
             for (auto pos = s.begin(); pos != s.end(); ++pos){
                 //*pos は、char ! char ってことが分かってたら、もっと簡単にできるのでは？？
-                if (*pos == '2' || *pos == '3' || *pos == '4' || *pos == '5' || 
-                    *pos == '6' || *pos == '7' || *pos == '8' || *pos == '9'){
+                if ('2'<=*pos && *pos <= '9'){
                    switch(*pos){
                        case '2': num = 2; break;
                        case '3': num = 3; break;
@@ -60,7 +64,6 @@ namespace cpp2 {
                        }
                        value_ +=mcxi_num;
                 }
-                
             }        
         }
 
@@ -72,10 +75,12 @@ namespace cpp2 {
            2 つのオブジェクトの加算結果を取得します。
          */
         /* ----------------------------------------------------------------- */
-        mcxi operator+(const mcxi& rhs) {
-            
-            return rhs;
-        }
+		mcxi operator +(const mcxi& rhs)
+		{
+			mcxi tmp("");
+			tmp.value_ = this->value_ + rhs.value_;  // 数値同士を計算
+			return tmp;
+		}
 
         /* ----------------------------------------------------------------- */
         /*
@@ -84,8 +89,19 @@ namespace cpp2 {
            現在の値を mcxi 記法に変換します。
          */
         /* ----------------------------------------------------------------- */
-        std::string to_string() const {
-            return "XXX";
+        std::string to_string()  const{
+            std::string str_return;
+            std::string stmp=std::to_string(value_);
+            
+            for(int i=0;i<=stmp.size();i++){
+                if (stmp[i]!='0'){
+                   if (stmp[i]!='1'){
+                        str_return+=stmp[i];
+                   }
+                      str_return+=str_mcxi_inverse[stmp.size()-(i+1)];
+                }
+            }
+            return str_return;
         }
         
         void debug_mcxi() {
@@ -95,8 +111,8 @@ namespace cpp2 {
         int get_value_(){
             return value_;
         }
-
-
+        
+        
 
     };
 }
@@ -106,14 +122,15 @@ bool Comparison(){
 }
 
 int main(){
+  
   cpp2::mcxi a0("xi");
   a0.debug_mcxi();
   cpp2::mcxi b0("x9i");
   b0.debug_mcxi();
   auto result0 = a0 + b0;
-  std::cout << "3x" <<" " << result0.to_string() << std::endl;
+  std::cout << result0.get_value_()<<" " << result0.to_string() << std::endl;
   
-  /*
+
   cpp2::mcxi a1("i");
   cpp2::mcxi b1("9i");
   auto result1 = a1 + b1;
@@ -158,5 +175,5 @@ int main(){
   cpp2::mcxi b9("c2x8i");
   auto result9 = a9 + b9;
   std::cout << "9m9c9x9i" << " " << result9.to_string() << std::endl;
-  */
+
 }
